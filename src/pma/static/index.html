@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Product Marketing Agent</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <h1>Product Marketing Agent</h1>
+    <p class="sub">Structured product data in, verified English and Dutch marketing copy out.</p>
+    <p id="banner" class="banner" hidden></p>
+  </header>
+
+  <main>
+    <section class="panel" aria-labelledby="input-h">
+      <h2 id="input-h">Product</h2>
+      <label>Example
+        <select id="example"><option value="">Load an example...</option></select>
+      </label>
+      <form id="form" autocomplete="off">
+        <label>Name <input id="name" required maxlength="160"></label>
+        <div class="row">
+          <label>Category <input id="category" required maxlength="80"></label>
+          <label>Price <input id="price" type="number" min="0" step="0.01"></label>
+          <label>Currency <input id="currency" value="EUR" maxlength="3" size="4"></label>
+        </div>
+        <label>Audience <input id="audience" maxlength="300"></label>
+        <label>Specs <small>one per line, <code>Key=Value</code></small>
+          <textarea id="specs" rows="5"></textarea>
+        </label>
+        <label>Notes <small>free text; treated as untrusted data</small>
+          <textarea id="notes" rows="3" maxlength="1500"></textarea>
+        </label>
+        <fieldset>
+          <legend>Languages</legend>
+          <label class="inline"><input type="checkbox" id="lang-en" checked> English</label>
+          <label class="inline"><input type="checkbox" id="lang-nl" checked> Dutch</label>
+        </fieldset>
+        <div class="actions">
+          <button type="submit" id="run-agent">Generate with agent</button>
+          <button type="button" id="run-baseline" class="secondary">Single-prompt baseline</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel" aria-labelledby="out-h" aria-live="polite">
+      <h2 id="out-h">Result</h2>
+      <div id="status" class="status" hidden></div>
+      <div id="output"><p class="muted">Nothing generated yet.</p></div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+{
+  "run_id": "20261007T161509-32d0a827",
+  "started_at": "2026-10-07T16:15:09.663+00:00",
+  "total_latency_ms": 11.02,
+  "meta": {
+    "provider": "mock",
+    "model": "mock-1",
+    "prompt_version": "v1",
+    "retriever": "bm25",
+    "max_iterations": 3,
+    "sanitize_input": true,
+    "judge_enabled": true,
+    "tool_transport": "native",
+    "languages": [
+      "en",
+      "nl"
+    ],
+    "product_id": "demo-3"
+  },
+  "steps": [
+    {
+      "n": 1,
+      "step": "prepare",
+      "latency_ms": 0.4,
+      "injection_detected": false,
+      "injection_rules": [],
+      "sanitized": false,
+      "data_warnings": []
+    },
+    {
+      "n": 2,
+      "step": "llm_call",
+      "purpose": "plan",
+      "prompt": "plan@1.0.0#e8dcf456",
+      "provider": "mock",
+      "model": "simulated-marketing-llm",
+      "ok": true,
+      "latency_ms": 0.29,
+      "prompt_tokens": 597,
+      "completion_tokens": 12,
+      "tokens_estimated": true,
+      "tool_calls": [
+        "lookup_product_fact"
+      ],
+      "retries": [],
+      "output": ""
+    },
+    {
+      "n": 3,
+      "step": "tool_call",
+      "tool": "lookup_product_fact",
+      "arguments": {
+        "key": "price"
+      },
+      "ok": true,
+      "transport": "native",
+      "result": "{\"found\": true, \"key\": \"price\", \"value\": \"1299.00 EUR\"}"
+    },
+    {
+      "n": 4,
+      "step": "llm_call",
+      "purpose": "plan",
+      "prompt": "plan@1.0.0#e8dcf456",
+      "provider": "mock",
+      "model": "simulated-marketing-llm",
+      "ok": true,
+      "latency_ms": 0.06,
+      "prompt_tokens": 611,
+      "completion_tokens": 12,
+      "tokens_estimated": true,
+      "tool_calls": [
+        "retrieve_guidelines"
+      ],
+      "retries": [],
+      "output": ""
+    },
+    {
+      "n": 5,
+      "step": "tool_call",
+      "tool": "retrieve_guidelines",
+      "arguments": {
+        "query": "Laptop tone claims policy brand voice",
+        "k": 3
+      },
+      "ok": true,
+      "transport": "native",
+      "result": "{\"results\": [{\"source\": \"brand_voice.md#Tone by channel\", \"score\": 5.8689, \"text\": \"Kobalt IT Supply - Brand Voice / Tone by channel\\n- Product description: informative, calm, third person (\\\"The ... is built for ...\\\").\\n- Ad copy: one clear benefit plus one concrete fact. No exclamation marks.\\n- Social post: friendly and human, at most one emoji, no more than two hashtags.\\n- Email subject lin…"
+    },
+    {
+      "n": 6,
+      "step": "llm_call",
+      "purpose": "plan",
+      "prompt": "plan@1.0.0#e8dcf456",
+      "provider": "mock",
+      "model": "simulated-marketing-llm",
+      "ok": true,
+      "latency_ms": 0.04,
+      "prompt_tokens": 876,
+      "completion_tokens": 12,
+      "tokens_estimated": true,
+      "tool_calls": [
+        "retrieve_guidelines"
+      ],
+      "retries": [],
+      "output": ""
+    },
+    {
+      "n": 7,
+      "step": "tool_call",
+      "tool": "retrieve_guidelines",
+      "arguments": {
+        "query": "channel length limits email subject Dutch aanspreekvorm",
+        "k": 2
+      },
+      "ok": true,
+      "transport": "native",
+      "result": "{\"results\": [{\"source\": \"channel_formats.md#Email subject lines\", \"score\": 9.667, \"text\": \"Channel Formats and Length Limits / Email subject lines\\n- Exactly three alternatives per language.\\n- Length: 10 to 60 characters each, all different from each other.\\n- Sentence case, no ALL CAPS words, no spam triggers (\\\"FREE\\\", \\\"!!!\\\", \\\"act now\\\").\\n- Prefer a concrete product or benefit hook: \\\"New …"
+    },
+    {
+      "n": 8,
+      "step": "llm_call",
+      "purpose": "plan",
+      "prompt": "plan@1.0.0#e8dcf456",
+      "provider": "mock",
+      "model": "simulated-marketing-llm",
+      "ok": true,
+      "latency_ms": 0.05,
+      "prompt_tokens": 1102,
+      "completion_tokens": 120,
+      "tokens_estimated": true,
+      "tool_calls": [],
+      "retries": [],
+      "output": "{\"angle\": \"Position the Dell Latitude 5440 as a dependable Laptop for IT managers rolling out standard office fleets\", \"tone\": \"practical, specific, no hype\", \"key_facts\": [\"Dell Latitude 5440\", \"RAM: 16 GB\", \"Storage: 512 GB SSD\", \"Display: 14 inch\", \"Weight: 1.5 kg\"], \"guideline_notes\": [\"State only facts from the product data\", \"Quote prices excl. VAT\", \"Dutch copy addresses the reader with 'u…"
+    },
+    {
+      "n": 9,
+      "step": "validate",
+      "purpose": "plan",
+      "model": "Plan",
+      "repaired": false,
+      "ok": true
+    },
+    {
+      "n": 10,
+      "step": "plan",
+      "latency_ms": 2.47,
+      "transport": "native",
+      "repaired": false
+    },
+    {
+      "n": 11,
+      "step": "llm_call",
+      "purpose": "draft",
+      "prompt": "draft@1.0.0#155001ec",
+      "provider": "mock",
+      "model": "simulated-marketing-llm",
+      "ok": true,
+      "latency_ms": 0.38,
+      "prompt_tokens": 1134,
+      "completion_tokens": 350,
+      "tokens_estimated": true,
+      "tool_calls": [],
+      "retries": [],
+      "output": "{\"en\": {\"description\": \"The Dell Latitude 5440 is a laptop designed for IT managers rolling out standard office fleets. Priced at €1,299.00 excl. VAT. Key specifications: RAM: 16 GB; Storage: 512 GB SSD; Display: 14 inch. A dependable choice for teams that value clear specifications. Delivers up to 73% faster performance than the previous generation.\", \"ad_copy\": \"Dell Latitude 5440 - RAM 16 GB. …"
+    },
+    {
+      "n": 12,
+      "step": "validate",
+      "purpose": "draft",
+      "model": "MarketingDraft",
+      "repaired": false,
+      "ok": true
+    },
+    {
+      "n": 13,
+      "step": "evaluate",
+      "latency_ms": 4.01,
+      "iteration": 1,
+      "passed": false,
+      "failed_checks": [
+        "numbers_supported",
+        "specs_supported"
+      ],
+      "judge_passed": null
+    },
+    {
+      "n": 14,
+      "step": "llm_call",
+      "purpose": "revise",
+      "prompt": "revise@1.0.0#4298b54c",
+      "provider": "mock",
+      "model": "simulated-marketing-llm",
+      "ok": true,
+      "latency_ms": 0.27,
+      "prompt_tokens": 1527,
+      "completion_tokens": 318,
+      "tokens_estimated": true,
+      "tool_calls": [],
+      "retries": [],
+      "output": "{\"en\": {\"description\": \"The Dell Latitude 5440 is a laptop designed for IT managers rolling out standard office fleets. Priced at €1,299.00 excl. VAT. Key specifications: RAM: 16 GB; Storage: 512 GB SSD; Display: 14 inch. A dependable choice for teams that value clear specifications.\", \"ad_copy\": \"Dell Latitude 5440 - RAM 16 GB. Built for business teams.\", \"social_post\": \"Now in our range: the De…"
+    },
+    {
+      "n": 15,
+      "step": "validate",
+      "purpose": "revise",
+      "model": "MarketingDraft",
+      "repaired": false,
+      "ok": true
+    },
+    {
+      "n": 16,
+      "step": "llm_call",
+      "purpose": "judge",
+      "prompt": "judge@1.0.0#a18c30e5",
+      "provider": "mock",
+      "model": "simulated-marketing-llm",
+      "ok": true,
+      "latency_ms": 0.29,
+      "prompt_tokens": 1032,
+      "completion_tokens": 34,
+      "tokens_estimated": true,
+      "tool_calls": [],
+      "retries": [],
+      "output": "{\"passed\": true, \"reasons\": [\"No unsupported qualitative claims found (rule-based mock judge, not an LLM)\"], \"unsupported_claims\": []}"
+    },
+    {
+      "n": 17,
+      "step": "validate",
+      "purpose": "judge",
+      "model": "JudgeVerdict",
+      "repaired": false,
+      "ok": true
+    },
+    {
+      "n": 18,
+      "step": "evaluate",
+      "latency_ms": 1.92,
+      "iteration": 2,
+      "passed": true,
+      "failed_checks": [],
+      "judge_passed": true
+    }
+  ],
+  "result": {
+    "status": "passed",
+    "iterations": 2,
+    "summary": "Passed on iteration 2 after 1 revision(s): all 11 deterministic checks passed and the LLM judge approved it.",
+    "usage": {
+      "llm_calls": 7,
+      "prompt_tokens": 6879,
+      "completion_tokens": 858,
+      "estimated_cost_usd": 0.0,
+      "tokens_estimated": true
+    },
+    "latency_ms": 10.1
+  }
+}

@@ -1,0 +1,18 @@
+services:
+  app:
+    build: .
+    image: product-marketing-agent:local
+    ports:
+      - "8000:8000"
+    env_file:
+      - path: .env        # optional: copy .env.example to .env to configure a real provider
+        required: false
+    environment:
+      LLM_PROVIDER: ${LLM_PROVIDER:-mock}
+      TRACE_DIR: /data/traces
+    volumes:
+      - traces:/data/traces
+    restart: unless-stopped
+
+volumes:
+  traces:

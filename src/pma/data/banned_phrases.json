@@ -1,0 +1,27 @@
+{
+  "version": "1.0.0",
+  "note": "Regex patterns, matched case-insensitively against generated copy in EVERY language (claims leak across languages). Each rule maps to a section of claims_policy.md.",
+  "rules": [
+    {"category": "unprovable_superlative", "pattern": "\\b(the )?best (in the world|ever|on the market|in class)\\b", "reason": "unprovable superlative"},
+    {"category": "unprovable_superlative", "pattern": "\\bnumber (one|1)\\b|#\\s?1\\b", "reason": "unprovable ranking claim"},
+    {"category": "unprovable_superlative", "pattern": "\\b(world'?s (best|fastest|first)|ultimate)\\b", "reason": "unprovable superlative"},
+    {"category": "price_claim", "pattern": "\\b(cheapest|lowest price|unbeatable (price|value|performance))\\b", "reason": "price/value claim without evidence"},
+    {"category": "guarantee", "pattern": "\\bguarantee[ds]?\\b", "reason": "use 'warranty' with the documented term instead of 'guarantee'"},
+    {"category": "guarantee", "pattern": "\\brisk[- ]free\\b", "reason": "risk-free promise"},
+    {"category": "security_absolute", "pattern": "\\b(unhackable|virus[- ]proof|completely secure|military[- ]grade|unbreakable|indestructible)\\b", "reason": "absolute security/durability claim"},
+    {"category": "absolute_outcome", "pattern": "\\beliminates? (all )?(downtime|errors|risks?|threats?)\\b", "reason": "absolute outcome claim"},
+    {"category": "credential", "pattern": "\\b(award[- ]winning|market[- ]leading|industry[- ]leading|market leader)\\b", "reason": "credential claim without evidence"},
+    {"category": "environmental", "pattern": "\\b(eco[- ]friendly|carbon[- ]neutral|climate[- ]neutral|zero[- ]emissions?)\\b", "reason": "environmental claim without certification"},
+    {"category": "comparative", "pattern": "\\b(better|faster|cheaper|smarter) than (any|all|every|the competition|competitors?|others)\\b", "reason": "unsupported comparative claim"},
+    {"category": "false_urgency", "pattern": "\\b(act now|limited time|only today|last chance|while stocks last|hurry)\\b", "reason": "invented urgency"},
+
+    {"category": "unprovable_superlative", "pattern": "\\bbeste ter wereld\\b|\\bde beste (van|op) (de markt|nederland)\\b|\\bnummer (een|1)\\b", "reason": "onbewijsbaar superlatief"},
+    {"category": "price_claim", "pattern": "\\b(goedkoopste|laagste prijs|onverslaanbare?)\\b", "reason": "prijs-/waardeclaim zonder bewijs"},
+    {"category": "guarantee", "pattern": "\\bgegarandeerd\\b|\\brisicoloos\\b|\\bzonder risico\\b", "reason": "garantiebelofte; gebruik 'garantie' met de gedocumenteerde termijn"},
+    {"category": "security_absolute", "pattern": "\\b(onhackbaar|onhackbare|virusvrij|volledig veilig|militaire kwaliteit|onbreekbaar|onbreekbare)\\b", "reason": "absolute veiligheids-/duurzaamheidsclaim"},
+    {"category": "credential", "pattern": "\\b(prijswinnend|marktleider|marktleidend)\\b", "reason": "claim over erkenning zonder bewijs"},
+    {"category": "environmental", "pattern": "\\b(milieuvriendelijk|klimaatneutraal|co2-neutraal)\\b", "reason": "milieuclaim zonder certificering"},
+    {"category": "comparative", "pattern": "\\b(sneller|beter|goedkoper|slimmer) dan (alle|elke|de concurrent\\w*|anderen)\\b", "reason": "onbewezen vergelijkende claim"},
+    {"category": "false_urgency", "pattern": "\\b(laatste kans|alleen vandaag|zolang de voorraad strekt|haast je)\\b", "reason": "verzonnen urgentie"}
+  ]
+}

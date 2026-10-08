@@ -1,0 +1,20 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# secrets and local config
+.env
+.env.*
+!.env.example
+
+# runtime output (docs/ holds the curated samples)
+traces/
+*.log

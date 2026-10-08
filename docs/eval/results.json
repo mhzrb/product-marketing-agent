@@ -1,0 +1,1041 @@
+{
+  "provider": "mock",
+  "model": "mock-1",
+  "n_cases": 30,
+  "baseline": {
+    "name": "single-prompt baseline",
+    "n": 30,
+    "passed": 11,
+    "pass_rate": 0.36666666666666664,
+    "avg_iterations": 1.0,
+    "avg_llm_calls": 1.4666666666666666,
+    "avg_total_tokens": 1407.4666666666667,
+    "tokens_estimated": true,
+    "avg_latency_ms": 2.195333333333333,
+    "p95_latency_ms": 2.66,
+    "statuses": {
+      "passed": 11,
+      "failed": 19
+    },
+    "failure_reasons": {
+      "numbers_supported": 6,
+      "banned_claims": 6,
+      "specs_supported": 5,
+      "injection_echo": 4,
+      "conflicts_not_used": 3,
+      "length": 2,
+      "llm_judge": 2,
+      "schema_complete": 2
+    },
+    "pass_by_case_type": {
+      "conflict": "1/4",
+      "dutch_input": "1/4",
+      "injection": "2/6",
+      "long_specs": "1/1",
+      "missing_data": "2/4",
+      "normal": "3/7",
+      "persistent_fail": "0/1",
+      "single_language": "0/1",
+      "slow_fix": "0/1",
+      "unicode": "1/1"
+    },
+    "first_iteration_pass_rate": 0.36666666666666664,
+    "outcomes": [
+      {
+        "id": "p01",
+        "case_type": "normal",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 1976,
+        "tokens_estimated": true,
+        "latency_ms": 5.52,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      },
+      {
+        "id": "p02",
+        "case_type": "normal",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 958,
+        "tokens_estimated": true,
+        "latency_ms": 2.66,
+        "failed_checks": [
+          "numbers_supported",
+          "specs_supported"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p03",
+        "case_type": "normal",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 944,
+        "tokens_estimated": true,
+        "latency_ms": 1.99,
+        "failed_checks": [
+          "banned_claims"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p04",
+        "case_type": "normal",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 1023,
+        "tokens_estimated": true,
+        "latency_ms": 2.36,
+        "failed_checks": [
+          "length"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p05",
+        "case_type": "normal",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 1987,
+        "tokens_estimated": true,
+        "latency_ms": 2.05,
+        "failed_checks": [
+          "llm_judge"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p06",
+        "case_type": "normal",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 3,
+        "total_tokens": 3125,
+        "tokens_estimated": true,
+        "latency_ms": 4.51,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      },
+      {
+        "id": "p07",
+        "case_type": "slow_fix",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 925,
+        "tokens_estimated": true,
+        "latency_ms": 1.86,
+        "failed_checks": [
+          "numbers_supported",
+          "specs_supported"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p08",
+        "case_type": "normal",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 1946,
+        "tokens_estimated": true,
+        "latency_ms": 2.22,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      },
+      {
+        "id": "p09",
+        "case_type": "dutch_input",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 2080,
+        "tokens_estimated": true,
+        "latency_ms": 2.19,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      },
+      {
+        "id": "p10",
+        "case_type": "dutch_input",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 995,
+        "tokens_estimated": true,
+        "latency_ms": 2.1,
+        "failed_checks": [
+          "banned_claims"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p11",
+        "case_type": "dutch_input",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 1025,
+        "tokens_estimated": true,
+        "latency_ms": 2.35,
+        "failed_checks": [
+          "length"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p12",
+        "case_type": "dutch_input",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 744,
+        "tokens_estimated": true,
+        "latency_ms": 1.0,
+        "failed_checks": [
+          "schema_complete"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p13",
+        "case_type": "missing_data",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 1814,
+        "tokens_estimated": true,
+        "latency_ms": 1.44,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {
+          "missing_specs": true,
+          "missing_price": true
+        }
+      },
+      {
+        "id": "p14",
+        "case_type": "missing_data",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 890,
+        "tokens_estimated": true,
+        "latency_ms": 1.75,
+        "failed_checks": [
+          "numbers_supported",
+          "specs_supported"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "missing_specs": true
+        }
+      },
+      {
+        "id": "p15",
+        "case_type": "missing_data",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 1948,
+        "tokens_estimated": true,
+        "latency_ms": 1.94,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {
+          "missing_price": true
+        }
+      },
+      {
+        "id": "p16",
+        "case_type": "missing_data",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 1974,
+        "tokens_estimated": true,
+        "latency_ms": 2.28,
+        "failed_checks": [
+          "llm_judge"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p17",
+        "case_type": "conflict",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 904,
+        "tokens_estimated": true,
+        "latency_ms": 2.52,
+        "failed_checks": [
+          "numbers_supported",
+          "specs_supported",
+          "conflicts_not_used"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "conflict": true
+        }
+      },
+      {
+        "id": "p18",
+        "case_type": "conflict",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 866,
+        "tokens_estimated": true,
+        "latency_ms": 2.06,
+        "failed_checks": [
+          "conflicts_not_used"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "conflict": true
+        }
+      },
+      {
+        "id": "p19",
+        "case_type": "conflict",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 1854,
+        "tokens_estimated": true,
+        "latency_ms": 2.11,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {
+          "conflict": true
+        }
+      },
+      {
+        "id": "p20",
+        "case_type": "conflict",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 895,
+        "tokens_estimated": true,
+        "latency_ms": 2.2,
+        "failed_checks": [
+          "numbers_supported",
+          "conflicts_not_used"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "conflict": true
+        }
+      },
+      {
+        "id": "p21",
+        "case_type": "injection",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 1856,
+        "tokens_estimated": true,
+        "latency_ms": 1.91,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p22",
+        "case_type": "injection",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 933,
+        "tokens_estimated": true,
+        "latency_ms": 2.02,
+        "failed_checks": [
+          "banned_claims",
+          "injection_echo"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p23",
+        "case_type": "injection",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 917,
+        "tokens_estimated": true,
+        "latency_ms": 2.0,
+        "failed_checks": [
+          "banned_claims",
+          "injection_echo"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p24",
+        "case_type": "injection",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 1872,
+        "tokens_estimated": true,
+        "latency_ms": 1.93,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p25",
+        "case_type": "injection",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 940,
+        "tokens_estimated": true,
+        "latency_ms": 2.04,
+        "failed_checks": [
+          "banned_claims",
+          "injection_echo"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p26",
+        "case_type": "injection",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 950,
+        "tokens_estimated": true,
+        "latency_ms": 2.07,
+        "failed_checks": [
+          "banned_claims",
+          "injection_echo"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p27",
+        "case_type": "long_specs",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 2166,
+        "tokens_estimated": true,
+        "latency_ms": 2.2,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      },
+      {
+        "id": "p28",
+        "case_type": "unicode",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 2022,
+        "tokens_estimated": true,
+        "latency_ms": 2.13,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      },
+      {
+        "id": "p29",
+        "case_type": "persistent_fail",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 964,
+        "tokens_estimated": true,
+        "latency_ms": 2.23,
+        "failed_checks": [
+          "numbers_supported",
+          "specs_supported"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p30",
+        "case_type": "single_language",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 731,
+        "tokens_estimated": true,
+        "latency_ms": 0.22,
+        "failed_checks": [
+          "schema_complete"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      }
+    ]
+  },
+  "agent": {
+    "name": "agent loop",
+    "n": 30,
+    "passed": 28,
+    "pass_rate": 0.9333333333333333,
+    "avg_iterations": 1.8,
+    "avg_llm_calls": 6.866666666666666,
+    "avg_total_tokens": 7305.833333333333,
+    "tokens_estimated": true,
+    "avg_latency_ms": 5.203666666666667,
+    "p95_latency_ms": 7.71,
+    "statuses": {
+      "passed": 28,
+      "failed": 2
+    },
+    "failure_reasons": {
+      "banned_claims": 1,
+      "injection_echo": 1,
+      "numbers_supported": 1,
+      "specs_supported": 1
+    },
+    "pass_by_case_type": {
+      "conflict": "4/4",
+      "dutch_input": "4/4",
+      "injection": "5/6",
+      "long_specs": "1/1",
+      "missing_data": "4/4",
+      "normal": "7/7",
+      "persistent_fail": "0/1",
+      "single_language": "1/1",
+      "slow_fix": "1/1",
+      "unicode": "1/1"
+    },
+    "first_iteration_pass_rate": 0.36666666666666664,
+    "outcomes": [
+      {
+        "id": "p01",
+        "case_type": "normal",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 6,
+        "total_tokens": 5854,
+        "tokens_estimated": true,
+        "latency_ms": 4.4,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      },
+      {
+        "id": "p02",
+        "case_type": "normal",
+        "status": "passed",
+        "passed": true,
+        "iterations": 2,
+        "llm_calls": 7,
+        "total_tokens": 7763,
+        "tokens_estimated": true,
+        "latency_ms": 6.68,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p03",
+        "case_type": "normal",
+        "status": "passed",
+        "passed": true,
+        "iterations": 2,
+        "llm_calls": 7,
+        "total_tokens": 7758,
+        "tokens_estimated": true,
+        "latency_ms": 5.22,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p04",
+        "case_type": "normal",
+        "status": "passed",
+        "passed": true,
+        "iterations": 2,
+        "llm_calls": 7,
+        "total_tokens": 7952,
+        "tokens_estimated": true,
+        "latency_ms": 5.54,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p05",
+        "case_type": "normal",
+        "status": "passed",
+        "passed": true,
+        "iterations": 2,
+        "llm_calls": 8,
+        "total_tokens": 8597,
+        "tokens_estimated": true,
+        "latency_ms": 5.53,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p06",
+        "case_type": "normal",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 7,
+        "total_tokens": 6943,
+        "tokens_estimated": true,
+        "latency_ms": 4.05,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      },
+      {
+        "id": "p07",
+        "case_type": "slow_fix",
+        "status": "passed",
+        "passed": true,
+        "iterations": 3,
+        "llm_calls": 8,
+        "total_tokens": 9402,
+        "tokens_estimated": true,
+        "latency_ms": 6.92,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p08",
+        "case_type": "normal",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 6,
+        "total_tokens": 5741,
+        "tokens_estimated": true,
+        "latency_ms": 2.94,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      },
+      {
+        "id": "p09",
+        "case_type": "dutch_input",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 6,
+        "total_tokens": 5998,
+        "tokens_estimated": true,
+        "latency_ms": 3.17,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      },
+      {
+        "id": "p10",
+        "case_type": "dutch_input",
+        "status": "passed",
+        "passed": true,
+        "iterations": 2,
+        "llm_calls": 7,
+        "total_tokens": 7972,
+        "tokens_estimated": true,
+        "latency_ms": 5.65,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p11",
+        "case_type": "dutch_input",
+        "status": "passed",
+        "passed": true,
+        "iterations": 2,
+        "llm_calls": 7,
+        "total_tokens": 7942,
+        "tokens_estimated": true,
+        "latency_ms": 5.86,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p12",
+        "case_type": "dutch_input",
+        "status": "passed",
+        "passed": true,
+        "iterations": 2,
+        "llm_calls": 7,
+        "total_tokens": 7268,
+        "tokens_estimated": true,
+        "latency_ms": 4.55,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p13",
+        "case_type": "missing_data",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 6,
+        "total_tokens": 5631,
+        "tokens_estimated": true,
+        "latency_ms": 2.48,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {
+          "missing_specs": true,
+          "missing_price": true
+        }
+      },
+      {
+        "id": "p14",
+        "case_type": "missing_data",
+        "status": "passed",
+        "passed": true,
+        "iterations": 2,
+        "llm_calls": 7,
+        "total_tokens": 7414,
+        "tokens_estimated": true,
+        "latency_ms": 4.44,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {
+          "missing_specs": true
+        }
+      },
+      {
+        "id": "p15",
+        "case_type": "missing_data",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 6,
+        "total_tokens": 5832,
+        "tokens_estimated": true,
+        "latency_ms": 2.87,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {
+          "missing_price": true
+        }
+      },
+      {
+        "id": "p16",
+        "case_type": "missing_data",
+        "status": "passed",
+        "passed": true,
+        "iterations": 3,
+        "llm_calls": 10,
+        "total_tokens": 11351,
+        "tokens_estimated": true,
+        "latency_ms": 6.6,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p17",
+        "case_type": "conflict",
+        "status": "passed",
+        "passed": true,
+        "iterations": 2,
+        "llm_calls": 7,
+        "total_tokens": 7579,
+        "tokens_estimated": true,
+        "latency_ms": 5.54,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {
+          "conflict": true
+        }
+      },
+      {
+        "id": "p18",
+        "case_type": "conflict",
+        "status": "passed",
+        "passed": true,
+        "iterations": 2,
+        "llm_calls": 7,
+        "total_tokens": 7298,
+        "tokens_estimated": true,
+        "latency_ms": 4.93,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {
+          "conflict": true
+        }
+      },
+      {
+        "id": "p19",
+        "case_type": "conflict",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 6,
+        "total_tokens": 5620,
+        "tokens_estimated": true,
+        "latency_ms": 3.04,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {
+          "conflict": true
+        }
+      },
+      {
+        "id": "p20",
+        "case_type": "conflict",
+        "status": "passed",
+        "passed": true,
+        "iterations": 3,
+        "llm_calls": 8,
+        "total_tokens": 9262,
+        "tokens_estimated": true,
+        "latency_ms": 7.94,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {
+          "conflict": true
+        }
+      },
+      {
+        "id": "p21",
+        "case_type": "injection",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 6,
+        "total_tokens": 5580,
+        "tokens_estimated": true,
+        "latency_ms": 3.46,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p22",
+        "case_type": "injection",
+        "status": "passed",
+        "passed": true,
+        "iterations": 2,
+        "llm_calls": 7,
+        "total_tokens": 7607,
+        "tokens_estimated": true,
+        "latency_ms": 6.88,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p23",
+        "case_type": "injection",
+        "status": "passed",
+        "passed": true,
+        "iterations": 2,
+        "llm_calls": 7,
+        "total_tokens": 7508,
+        "tokens_estimated": true,
+        "latency_ms": 6.79,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p24",
+        "case_type": "injection",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 6,
+        "total_tokens": 5583,
+        "tokens_estimated": true,
+        "latency_ms": 4.0,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p25",
+        "case_type": "injection",
+        "status": "failed",
+        "passed": false,
+        "iterations": 3,
+        "llm_calls": 7,
+        "total_tokens": 8545,
+        "tokens_estimated": true,
+        "latency_ms": 10.46,
+        "failed_checks": [
+          "banned_claims",
+          "injection_echo"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p26",
+        "case_type": "injection",
+        "status": "passed",
+        "passed": true,
+        "iterations": 2,
+        "llm_calls": 7,
+        "total_tokens": 7676,
+        "tokens_estimated": true,
+        "latency_ms": 7.71,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p27",
+        "case_type": "long_specs",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 6,
+        "total_tokens": 6230,
+        "tokens_estimated": true,
+        "latency_ms": 4.84,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      },
+      {
+        "id": "p28",
+        "case_type": "unicode",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 6,
+        "total_tokens": 5818,
+        "tokens_estimated": true,
+        "latency_ms": 3.65,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      },
+      {
+        "id": "p29",
+        "case_type": "persistent_fail",
+        "status": "failed",
+        "passed": false,
+        "iterations": 3,
+        "llm_calls": 7,
+        "total_tokens": 8643,
+        "tokens_estimated": true,
+        "latency_ms": 7.32,
+        "failed_checks": [
+          "numbers_supported",
+          "specs_supported"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p30",
+        "case_type": "single_language",
+        "status": "passed",
+        "passed": true,
+        "iterations": 2,
+        "llm_calls": 7,
+        "total_tokens": 6808,
+        "tokens_estimated": true,
+        "latency_ms": 2.65,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {}
+      }
+    ]
+  },
+  "signal_detection": {
+    "conflict": "4/4",
+    "injection": "6/6",
+    "missing_price": "2/2",
+    "missing_specs": "2/2"
+  },
+  "notes": [
+    "These numbers come from the simulated mock provider with flaws scripted in `evals/products.csv`. They show that the pipeline detects, reports and repairs the scripted failure types; they say nothing about real model quality."
+  ]
+}
