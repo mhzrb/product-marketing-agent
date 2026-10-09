@@ -21,6 +21,7 @@ from pma.providers.base import ChatMessage, LLMRequest, LLMResponse, ToolCall, T
 from pma.providers.mock import MockProvider, MockScriptExhausted
 from pma.providers.openai_compat import OpenAICompatibleProvider
 from pma.reliability import retry_call
+from pma.schemas import Plan
 
 REQ = LLMRequest(
     messages=[ChatMessage("system", "be brief"), ChatMessage("user", "hi")], purpose="draft"
@@ -232,6 +233,70 @@ def test_other_400_errors_are_not_treated_as_invalid_tool_calls(response):
     with pytest.raises(ProviderError) as err:
         p.complete(REQ)
     assert not isinstance(err.value, InvalidToolCall)
+
+
+# Shape of a real rejection (openai/gpt-oss-120b on Groq): the final plan was sent as a call to a
+# tool called "json", which was not in the request.
+JSON_TOOL_CALL = {
+    "name": "json",
+    "arguments": {
+        "angle": "A portable laptop for mobile professionals.",
+        "tone": "Professional and concise.",
+        "key_facts": ["Price: 1599.00 EUR", "Display: 14 inch"],
+        "guideline_notes": ["Avoid unsubstantiated claims."],
+        "must_avoid": ["best", "guaranteed"],
+    },
+}
+
+
+def _rejected(failed_generation):
+    return httpx.Response(
+        400,
+        json={
+            "error": {
+                "message": "Tool call validation failed: attempted to call tool 'json'",
+                "type": "invalid_request_error",
+                "code": "tool_use_failed",
+                "failed_generation": failed_generation,
+            }
+        },
+    )
+
+
+def test_a_rejected_json_tool_call_is_recovered_as_the_final_answer():
+    p = oa(lambda r: _rejected(json.dumps(JSON_TOOL_CALL)))
+    resp = p.complete(REQ)
+    assert resp.tool_calls == [] and resp.finish_reason == "recovered_tool_use_failed"
+    assert resp.usage.estimated
+    plan = Plan.model_validate_json(resp.content)
+    assert plan.angle.startswith("A portable laptop") and plan.must_avoid == ["best", "guaranteed"]
+
+
+def test_a_rejected_json_tool_call_with_string_arguments_is_recovered():
+    call = {"name": "json", "arguments": json.dumps(JSON_TOOL_CALL["arguments"])}
+    resp = oa(lambda r: _rejected(json.dumps(call))).complete(REQ)
+    assert Plan.model_validate_json(resp.content).tone == "Professional and concise."
+
+
+@pytest.mark.parametrize(
+    "failed_generation",
+    [
+        json.dumps(
+            {"name": "format_disk", "arguments": {"path": "/"}}
+        ),  # another tool: not accepted
+        json.dumps({"name": "json", "arguments": {}}),  # nothing to recover
+        json.dumps({"name": "json", "arguments": ["a"]}),
+        json.dumps({"name": "json", "arguments": "not json"}),
+        json.dumps(["json"]),
+        "SECRET-MODEL-OUTPUT",
+        None,
+    ],
+)
+def test_only_the_narrow_json_tool_call_shape_is_recovered(failed_generation):
+    p = oa(lambda r: _rejected(failed_generation))
+    with pytest.raises(InvalidToolCall) as err:
+        p.complete(REQ)
+    assert "SECRET-MODEL-OUTPUT" not in str(err.value)
 
 
 def test_openai_tool_use_failed_is_retried_and_the_next_answer_is_used():

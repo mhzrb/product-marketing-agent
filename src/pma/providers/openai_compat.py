@@ -3,8 +3,9 @@
 Works with any server that implements ``POST {base_url}/chat/completions``: hosted free tiers,
 vLLM, LM Studio, or a local Ollama server (``OPENAI_BASE_URL=http://localhost:11434/v1``).
 
-STATUS: exercised only against a local fake server and ``httpx.MockTransport`` in this repository.
-NOT VERIFIED against any real hosted API or a real Ollama instance.
+STATUS: exercised against a local fake server and ``httpx.MockTransport``, and in small runs
+against one hosted free tier (Groq, ``openai/gpt-oss-120b``; see the README). NOT VERIFIED against
+a real Ollama instance or any other hosted API.
 """
 
 from __future__ import annotations
@@ -22,6 +23,7 @@ from pma.errors import (
     ProviderServerError,
     ProviderTimeout,
 )
+from pma.logging_setup import get_logger
 from pma.providers.base import (
     ChatMessage,
     LLMProvider,
@@ -32,6 +34,8 @@ from pma.providers.base import (
     estimate_request_tokens,
     estimate_tokens,
 )
+
+log = get_logger("providers.openai_compat")
 
 
 def _retry_after(response: httpx.Response) -> float | None:
@@ -51,6 +55,32 @@ def _is_tool_use_failed(response: httpx.Response) -> bool:
         return False
     error = data.get("error") if isinstance(data, dict) else None
     return isinstance(error, dict) and error.get("code") == "tool_use_failed"
+
+
+def _recover_json_tool_call(response: httpx.Response) -> str | None:
+    """Return the final answer from a rejected tool call named exactly ``json``, else ``None``.
+
+    Seen with ``openai/gpt-oss-120b`` on Groq: after its tool calls the model delivered its final
+    JSON as a call to a tool called ``json``. The API rejects that with HTTP 400 ``tool_use_failed``
+    but returns the model's output in ``failed_generation``. Only this one narrow shape is
+    accepted (name ``json``, a non-empty object as arguments); the text goes through the normal
+    schema validation afterwards, like any other model output.
+    """
+    try:
+        call = json.loads(response.json()["error"]["failed_generation"])
+    except (ValueError, KeyError, TypeError):
+        return None
+    if not isinstance(call, dict) or call.get("name") != "json":
+        return None
+    arguments = call.get("arguments")
+    if isinstance(arguments, str):
+        try:
+            arguments = json.loads(arguments)
+        except ValueError:
+            return None
+    if not isinstance(arguments, dict) or not arguments:
+        return None
+    return json.dumps(arguments, ensure_ascii=False)
 
 
 def _to_wire(message: ChatMessage) -> dict[str, Any]:
@@ -147,9 +177,23 @@ class OpenAICompatibleProvider(LLMProvider):
                 f"server error {response.status_code}", retry_after=_retry_after(response)
             )
         if response.status_code == 400 and _is_tool_use_failed(response):
-            # The model wrote an invalid tool call (seen with gpt-oss on Groq: it tried to call a
-            # tool named "json" to deliver its final answer). The body holds the model's output,
-            # so it is not copied into the error message.
+            recovered = _recover_json_tool_call(response)
+            if recovered is not None:
+                log.warning(
+                    "recovered the final answer from a rejected tool call named json",
+                    extra={"purpose": request.purpose},
+                )
+                return LLMResponse(
+                    content=recovered,
+                    usage=Usage(
+                        estimate_request_tokens(request),
+                        estimate_tokens(recovered),
+                        estimated=True,
+                    ),
+                    model=self.model,
+                    finish_reason="recovered_tool_use_failed",
+                )
+            # Some other invalid tool call: the model's output is not copied into the error.
             raise InvalidToolCall("the model produced an invalid tool call (tool_use_failed)")
         if response.status_code >= 400:
             # Never echo the response body into logs verbatim: it may contain request content.

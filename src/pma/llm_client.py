@@ -117,6 +117,7 @@ class LLMClient:
             "prompt_tokens": response.usage.prompt_tokens,
             "completion_tokens": response.usage.completion_tokens,
             "tokens_estimated": response.usage.estimated,
+            "finish_reason": response.finish_reason,
             "tool_calls": [c.name for c in response.tool_calls],
             "retries": retries,
             "output": self.trace.io(response.content),
