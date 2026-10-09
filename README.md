@@ -351,7 +351,7 @@ and 200,000 per day when this was run) and are **not** model latency.
 | Ollama, Anthropic adapter, other hosted APIs | **NOT VERIFIED** | only fakes |
 | Agent vs single prompt on harder cases with a real model | **NOT MEASURED** | the free daily token budget ran out before the agent runs |
 | Real embeddings endpoint (`EMBEDDINGS_BACKEND=openai_compatible`) | **NOT VERIFIED** | tested with `httpx.MockTransport` only |
-| Web page behaviour in a browser | **NOT VERIFIED** | assets are served and syntax-checked; DOM behaviour was never executed in a browser |
+| Web page behaviour in a browser | **Verified manually (mock provider only)** | `pma serve`, tried by hand on 9 Oct 2026: both buttons return a result, a changed product name appears in the text, and an injection sentence in Notes is flagged under "Security" and not echoed. Not tested: real provider through the page, other browsers, phone screens |
 | Quality of real generated copy, real pass rates, cost | **Partly measured** | small single runs only (see above); cost not measured |
 | Native-speaker quality of Dutch output | **NOT VERIFIED** | Dutch text here is from templates; checks are heuristic |
 
