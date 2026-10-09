@@ -15,13 +15,14 @@ than a prompt wrapper:
 
 No LangChain, no agent framework: `httpx` + `pydantic` + FastAPI only.
 
-> **Read this first - what is simulated.** No real LLM could be called while building this repo
-> (no network to model APIs, no GPU). Everything runs against `MockProvider`, whose default
-> behaviour is a **rule-based simulator, not a language model**. It writes template copy and injects
-> *scripted* mistakes so the surrounding system can be exercised. The pipeline, evaluator, tools,
-> retries, budgets, tracing and security handling are real code that is tested; the *text quality*
-> and all *evaluation percentages* below come from the simulation. See
-> [Results](#results-mock-provider-only) and [Verified here / NOT VERIFIED](#verified-here--not-verified).
+> **Read this first - what is simulated.** The offline demo, the test suite and the large
+> evaluation tables in [Results](#results-mock-provider-only) run against `MockProvider`, a
+> **rule-based simulator, not a language model**. It writes template copy and injects *scripted*
+> mistakes so the surrounding system can be exercised; those percentages say nothing about real
+> model quality. A small run against one real model (Groq free tier, `openai/gpt-oss-120b`) is
+> documented in [Real-model run](#real-model-run-small-one-provider). It found real bugs, and it
+> did **not** show that the agent beats a single prompt. See also
+> [Verified here / NOT VERIFIED](#verified-here--not-verified).
 
 ## Architecture
 
@@ -102,7 +103,9 @@ gateway before exposing it.
 
 ## Using a real provider
 
-Copy `.env.example` to `.env` and set the variables (never commit `.env`).
+Copy `.env.example` to `.env` and set the variables (never commit `.env`). Note that the CLI
+does **not** read `.env` itself: `export` the variables in your shell, or use `docker compose`,
+which loads `.env` through `env_file`.
 
 **Local Ollama (OpenAI-compatible endpoint):**
 
@@ -121,9 +124,11 @@ Notes: tool calling is used natively only if `LLM_SUPPORTS_TOOLS=true` (Anthropi
 otherwise the JSON tool protocol is used, which works with any chat model. Set
 `PRICE_PER_1K_PROMPT_USD`/`PRICE_PER_1K_COMPLETION_USD` if you want `MAX_COST_USD` to be enforced.
 
-> **NOT VERIFIED:** the real-provider code paths were never run against a real server. They are
-> tested against a local fake OpenAI-compatible server and `httpx.MockTransport`, which proves our
-> request/response handling, retries and timeouts, not compatibility with any vendor.
+> **Partly verified:** the OpenAI-compatible provider was run against one real hosted endpoint
+> (Groq free tier, `openai/gpt-oss-120b`) in small runs, see
+> [Real-model run](#real-model-run-small-one-provider). Ollama, other hosted APIs, the Anthropic
+> adapter and real embeddings endpoints are still **NOT VERIFIED** (fakes and `httpx.MockTransport`
+> only).
 
 ### Measuring a real model
 
@@ -153,7 +158,7 @@ ruff check . && ruff format --check .
 pytest --cov
 ```
 
-Last run in the build workspace (Python 3.13): **299 tests passed**, line+branch coverage **96%**, `ruff check` and `ruff format --check` clean.
+Last run in the build workspace (Python 3.13): **305 tests passed**, line+branch coverage **96%**, `ruff check` and `ruff format --check` clean.
 
 What the suite covers: tools (EN + NL banned-claim patterns, argument validation), BM25/embeddings
 retrieval and fallback, number/unit normalisation and conflict handling, every evaluator check,
@@ -284,6 +289,47 @@ iterations, failure-reason frequencies and latency on a real model are unknown u
 `evals/run_real_provider.py` is run. The latency column is pipeline overhead with a zero-latency
 mock, not model latency; token counts are estimates (~4 characters/token).
 
+## Real-model run (small, one provider)
+
+Run on 8 Oct 2026 with `evals/run_real_provider.py` against the Groq free tier, model
+`openai/gpt-oss-120b`, through `OpenAICompatibleProvider`. Every run was a **single run with small
+n and no repeats: treat it as anecdotal, not statistical**. The judge is the same model that writes
+the copy. Latencies include waiting for rate limits (the free tier allowed 8,000 tokens per minute
+and 200,000 per day when this was run) and are **not** model latency.
+
+| Run | Setup | Result |
+|---|---|---|
+| 1 product (Dell Latitude 5440), agent, before the fixes below | JSON tool protocol | passed on iteration 3 (9 LLM calls) |
+| 5 "normal" products, before the fixes below | JSON tool protocol | baseline 2/5, agent 0/5: every agent run died in the plan step (empty model reply, see bug 1) |
+| 5 "normal" products, after the fixes | JSON tool protocol | baseline **5/5**, agent **2/5** (2 plan-step errors, 1 failed `numbers_supported`); agent used 2.3x the tokens |
+| 1 product, agent | native tool calling | passed on iteration 2 (7 LLM calls), n=1 |
+| 10 harder products ([`evals/products_hard10.csv`](evals/products_hard10.csv)), baseline | native tool calling | 4/10 passed (`llm_judge` 2, `conflicts_not_used`, `length`, `mentions_product`, 1 error) |
+| same 10 products, agent | native tool calling | **NOT MEASURED**: all 10 runs ended in HTTP 429 because the free daily token budget was used up |
+| Input-side signals on those 10 | deterministic | conflict 2/2, injection 3/3, missing price 1/1, missing specs 2/2 flagged (independent of the model) |
+
+**What the real model found** (none of these showed up with the simulator):
+
+1. **Empty replies were treated as answers.** The model sometimes returns an empty message (it
+   reasons, then outputs nothing). The "repair" step then invented an invalid reply. Fixed: an empty
+   reply is now a retryable `EmptyResponse`.
+2. **The generator was not told what the evaluator enforces.** Descriptions must contain the exact
+   product name, but the prompt never said so and the feedback did not name the string. Fixed in
+   `system.md` (v1.1.0) and in the evaluator feedback.
+3. **A brand guideline contradicted the judge.** `brand_voice.md` listed "reliable", "dependable"
+   and "clear pricing" as liked words; the judge rejected them as unsupported claims. Fixed.
+4. **The judge was inconsistent and re-judged numbers.** It ran at temperature 0.3, rejected
+   "1.299,00" in one round and demanded it in the next, and duplicated the deterministic number
+   check. Fixed: temperature 0 and a narrower judge prompt (`judge.md` v1.1.0).
+
+**Caveats you should hold against these results**
+
+- Prompts were changed after seeing failures on products p01-p05, which are part of the evaluation
+  set, so results on those products are **not a held-out test**.
+- On the five easy products the single prompt was better and cheaper than the agent loop.
+- Whether the agent loop beats a single prompt on harder cases (conflicts, injection, missing data)
+  is **not measured**. Re-run `python evals/run_real_provider.py --csv evals/products_hard10.csv
+  --approaches agent` when a model with enough token budget is available.
+
 ## Verified here / NOT VERIFIED
 
 | Item | Status | Evidence / reason |
@@ -300,10 +346,12 @@ mock, not model latency; token counts are estimates (~4 characters/token).
 | `docker build` / running the container | **NOT VERIFIED** | Docker daemon starts, but Docker Hub is blocked in the sandbox (403), base image cannot be pulled |
 | GitHub Actions workflow | **NOT VERIFIED** | YAML parses; never executed (no GitHub access) |
 | Python 3.11 / 3.12 | **NOT VERIFIED** | only 3.13 available; CI matrix covers 3.11-3.13 |
-| Any real LLM (Ollama, hosted free tier, Anthropic) | **NOT VERIFIED** | no network access to model APIs; only fakes |
+| Real hosted LLM, small runs (Groq free tier, `openai/gpt-oss-120b`) | **Verified (one provider, small n)** | see [Real-model run](#real-model-run-small-one-provider) |
+| Ollama, Anthropic adapter, other hosted APIs | **NOT VERIFIED** | only fakes |
+| Agent vs single prompt on harder cases with a real model | **NOT MEASURED** | the free daily token budget ran out before the agent runs |
 | Real embeddings endpoint (`EMBEDDINGS_BACKEND=openai_compatible`) | **NOT VERIFIED** | tested with `httpx.MockTransport` only |
 | Web page behaviour in a browser | **NOT VERIFIED** | assets are served and syntax-checked; DOM behaviour was never executed in a browser |
-| Quality of real generated copy, real pass rates, cost | **NOT VERIFIED** | requires a real model: use `evals/run_real_provider.py` |
+| Quality of real generated copy, real pass rates, cost | **Partly measured** | small single runs only (see above); cost not measured |
 | Native-speaker quality of Dutch output | **NOT VERIFIED** | Dutch text here is from templates; checks are heuristic |
 
 ## Honest limitations

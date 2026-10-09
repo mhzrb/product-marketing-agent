@@ -1,0 +1,204 @@
+{
+  "provider": "openai_compatible",
+  "model": "openai/gpt-oss-120b",
+  "n_cases": 5,
+  "baseline": {
+    "name": "single-prompt baseline",
+    "n": 5,
+    "passed": 5,
+    "pass_rate": 1.0,
+    "avg_iterations": 1.0,
+    "avg_llm_calls": 2.0,
+    "avg_total_tokens": 4375.0,
+    "tokens_estimated": false,
+    "avg_latency_ms": 33557.35400000001,
+    "p95_latency_ms": 59492.12,
+    "statuses": {
+      "passed": 5
+    },
+    "failure_reasons": {},
+    "pass_by_case_type": {
+      "normal": "5/5"
+    },
+    "first_iteration_pass_rate": 1.0,
+    "outcomes": [
+      {
+        "id": "p01",
+        "case_type": "normal",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 4647,
+        "tokens_estimated": false,
+        "latency_ms": 15542.86,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      },
+      {
+        "id": "p02",
+        "case_type": "normal",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 4071,
+        "tokens_estimated": false,
+        "latency_ms": 14128.71,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      },
+      {
+        "id": "p03",
+        "case_type": "normal",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 4631,
+        "tokens_estimated": false,
+        "latency_ms": 59492.12,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      },
+      {
+        "id": "p04",
+        "case_type": "normal",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 4285,
+        "tokens_estimated": false,
+        "latency_ms": 30104.47,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      },
+      {
+        "id": "p05",
+        "case_type": "normal",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 4241,
+        "tokens_estimated": false,
+        "latency_ms": 48518.61,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      }
+    ]
+  },
+  "agent": {
+    "name": "agent loop",
+    "n": 5,
+    "passed": 2,
+    "pass_rate": 0.4,
+    "avg_iterations": 1.8,
+    "avg_llm_calls": 4.8,
+    "avg_total_tokens": 10182.8,
+    "tokens_estimated": false,
+    "avg_latency_ms": 76023.3,
+    "p95_latency_ms": 134339.98,
+    "statuses": {
+      "error": 2,
+      "passed": 2,
+      "failed": 1
+    },
+    "failure_reasons": {
+      "error": 2,
+      "numbers_supported": 1
+    },
+    "pass_by_case_type": {
+      "normal": "2/5"
+    },
+    "first_iteration_pass_rate": 0.0,
+    "outcomes": [
+      {
+        "id": "p01",
+        "case_type": "normal",
+        "status": "error",
+        "passed": false,
+        "iterations": 0,
+        "llm_calls": 2,
+        "total_tokens": 2641,
+        "tokens_estimated": false,
+        "latency_ms": 27558.82,
+        "failed_checks": [
+          "error"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p02",
+        "case_type": "normal",
+        "status": "passed",
+        "passed": true,
+        "iterations": 3,
+        "llm_calls": 7,
+        "total_tokens": 15850,
+        "tokens_estimated": false,
+        "latency_ms": 108642.21,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p03",
+        "case_type": "normal",
+        "status": "passed",
+        "passed": true,
+        "iterations": 3,
+        "llm_calls": 9,
+        "total_tokens": 18414,
+        "tokens_estimated": false,
+        "latency_ms": 134339.98,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p04",
+        "case_type": "normal",
+        "status": "error",
+        "passed": false,
+        "iterations": 0,
+        "llm_calls": 0,
+        "total_tokens": 0,
+        "tokens_estimated": false,
+        "latency_ms": 19858.55,
+        "failed_checks": [
+          "error"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p05",
+        "case_type": "normal",
+        "status": "failed",
+        "passed": false,
+        "iterations": 3,
+        "llm_calls": 6,
+        "total_tokens": 14009,
+        "tokens_estimated": false,
+        "latency_ms": 89716.94,
+        "failed_checks": [
+          "numbers_supported"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      }
+    ]
+  },
+  "signal_detection": {},
+  "notes": [
+    "Real-provider run on 2026-10-08; n=5, single run, temperature as configured in the provider: expect run-to-run variance."
+  ]
+}

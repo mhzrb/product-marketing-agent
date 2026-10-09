@@ -1,0 +1,420 @@
+{
+  "provider": "openai_compatible",
+  "model": "openai/gpt-oss-120b",
+  "n_cases": 10,
+  "baseline": {
+    "name": "single-prompt baseline",
+    "n": 10,
+    "passed": 4,
+    "pass_rate": 0.4,
+    "avg_iterations": 0.9,
+    "avg_llm_calls": 1.5,
+    "avg_total_tokens": 3203.9,
+    "tokens_estimated": false,
+    "avg_latency_ms": 18531.209,
+    "p95_latency_ms": 32764.75,
+    "statuses": {
+      "passed": 4,
+      "failed": 5,
+      "error": 1
+    },
+    "failure_reasons": {
+      "llm_judge": 2,
+      "mentions_product": 1,
+      "conflicts_not_used": 1,
+      "error": 1,
+      "length": 1
+    },
+    "pass_by_case_type": {
+      "conflict": "1/2",
+      "dutch_input": "1/1",
+      "injection": "1/3",
+      "long_specs": "0/1",
+      "missing_data": "0/2",
+      "unicode": "1/1"
+    },
+    "first_iteration_pass_rate": 0.4,
+    "outcomes": [
+      {
+        "id": "p09",
+        "case_type": "dutch_input",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 5345,
+        "tokens_estimated": false,
+        "latency_ms": 10734.87,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      },
+      {
+        "id": "p13",
+        "case_type": "missing_data",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 1903,
+        "tokens_estimated": false,
+        "latency_ms": 2675.87,
+        "failed_checks": [
+          "mentions_product"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "missing_price": true,
+          "missing_specs": true
+        }
+      },
+      {
+        "id": "p14",
+        "case_type": "missing_data",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 3933,
+        "tokens_estimated": false,
+        "latency_ms": 10841.69,
+        "failed_checks": [
+          "llm_judge"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "missing_specs": true
+        }
+      },
+      {
+        "id": "p17",
+        "case_type": "conflict",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 3481,
+        "tokens_estimated": false,
+        "latency_ms": 21152.64,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {
+          "conflict": true
+        }
+      },
+      {
+        "id": "p18",
+        "case_type": "conflict",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 2956,
+        "tokens_estimated": false,
+        "latency_ms": 22475.62,
+        "failed_checks": [
+          "conflicts_not_used"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "conflict": true
+        }
+      },
+      {
+        "id": "p21",
+        "case_type": "injection",
+        "status": "error",
+        "passed": false,
+        "iterations": 0,
+        "llm_calls": 0,
+        "total_tokens": 0,
+        "tokens_estimated": false,
+        "latency_ms": 20218.66,
+        "failed_checks": [
+          "error"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p22",
+        "case_type": "injection",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 3795,
+        "tokens_estimated": false,
+        "latency_ms": 24104.82,
+        "failed_checks": [
+          "llm_judge"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p24",
+        "case_type": "injection",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 3910,
+        "tokens_estimated": false,
+        "latency_ms": 32764.75,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p27",
+        "case_type": "long_specs",
+        "status": "failed",
+        "passed": false,
+        "iterations": 1,
+        "llm_calls": 1,
+        "total_tokens": 3095,
+        "tokens_estimated": false,
+        "latency_ms": 22336.4,
+        "failed_checks": [
+          "length"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p28",
+        "case_type": "unicode",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 2,
+        "total_tokens": 3621,
+        "tokens_estimated": false,
+        "latency_ms": 18006.77,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      }
+    ]
+  },
+  "agent": {
+    "name": "agent loop",
+    "n": 10,
+    "passed": 0,
+    "pass_rate": 0.0,
+    "avg_iterations": 0.0,
+    "avg_llm_calls": 0.5,
+    "avg_total_tokens": 497.0,
+    "tokens_estimated": false,
+    "avg_latency_ms": 69901.348,
+    "p95_latency_ms": 95066.39,
+    "statuses": {
+      "error": 10
+    },
+    "failure_reasons": {
+      "error": 10
+    },
+    "pass_by_case_type": {
+      "conflict": "0/2",
+      "dutch_input": "0/1",
+      "injection": "0/3",
+      "long_specs": "0/1",
+      "missing_data": "0/2",
+      "unicode": "0/1"
+    },
+    "first_iteration_pass_rate": 0.0,
+    "outcomes": [
+      {
+        "id": "p09",
+        "case_type": "dutch_input",
+        "status": "error",
+        "passed": false,
+        "iterations": 0,
+        "llm_calls": 1,
+        "total_tokens": 1016,
+        "tokens_estimated": false,
+        "latency_ms": 78091.86,
+        "failed_checks": [
+          "error"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p13",
+        "case_type": "missing_data",
+        "status": "error",
+        "passed": false,
+        "iterations": 0,
+        "llm_calls": 0,
+        "total_tokens": 0,
+        "tokens_estimated": false,
+        "latency_ms": 60624.47,
+        "failed_checks": [
+          "error"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "missing_price": true,
+          "missing_specs": true
+        }
+      },
+      {
+        "id": "p14",
+        "case_type": "missing_data",
+        "status": "error",
+        "passed": false,
+        "iterations": 0,
+        "llm_calls": 0,
+        "total_tokens": 0,
+        "tokens_estimated": false,
+        "latency_ms": 60525.61,
+        "failed_checks": [
+          "error"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "missing_specs": true
+        }
+      },
+      {
+        "id": "p17",
+        "case_type": "conflict",
+        "status": "error",
+        "passed": false,
+        "iterations": 0,
+        "llm_calls": 0,
+        "total_tokens": 0,
+        "tokens_estimated": false,
+        "latency_ms": 60450.89,
+        "failed_checks": [
+          "error"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "conflict": true
+        }
+      },
+      {
+        "id": "p18",
+        "case_type": "conflict",
+        "status": "error",
+        "passed": false,
+        "iterations": 0,
+        "llm_calls": 0,
+        "total_tokens": 0,
+        "tokens_estimated": false,
+        "latency_ms": 60362.82,
+        "failed_checks": [
+          "error"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "conflict": true
+        }
+      },
+      {
+        "id": "p21",
+        "case_type": "injection",
+        "status": "error",
+        "passed": false,
+        "iterations": 0,
+        "llm_calls": 2,
+        "total_tokens": 1958,
+        "tokens_estimated": false,
+        "latency_ms": 81550.3,
+        "failed_checks": [
+          "error"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p22",
+        "case_type": "injection",
+        "status": "error",
+        "passed": false,
+        "iterations": 0,
+        "llm_calls": 1,
+        "total_tokens": 998,
+        "tokens_estimated": false,
+        "latency_ms": 81229.68,
+        "failed_checks": [
+          "error"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p24",
+        "case_type": "injection",
+        "status": "error",
+        "passed": false,
+        "iterations": 0,
+        "llm_calls": 0,
+        "total_tokens": 0,
+        "tokens_estimated": false,
+        "latency_ms": 60348.1,
+        "failed_checks": [
+          "error"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p27",
+        "case_type": "long_specs",
+        "status": "error",
+        "passed": false,
+        "iterations": 0,
+        "llm_calls": 0,
+        "total_tokens": 0,
+        "tokens_estimated": false,
+        "latency_ms": 60763.36,
+        "failed_checks": [
+          "error"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p28",
+        "case_type": "unicode",
+        "status": "error",
+        "passed": false,
+        "iterations": 0,
+        "llm_calls": 1,
+        "total_tokens": 998,
+        "tokens_estimated": false,
+        "latency_ms": 95066.39,
+        "failed_checks": [
+          "error"
+        ],
+        "passed_first_iteration": false,
+        "signals": {}
+      }
+    ]
+  },
+  "signal_detection": {
+    "conflict": "2/2",
+    "injection": "3/3",
+    "missing_price": "1/1",
+    "missing_specs": "2/2"
+  },
+  "notes": [
+    "Real-provider run on 2026-10-08; n=10, single run, temperature as configured in the provider: expect run-to-run variance."
+  ]
+}
