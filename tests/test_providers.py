@@ -8,6 +8,7 @@ import pytest
 from pma.config import Settings
 from pma.errors import (
     ConfigError,
+    EmptyResponse,
     ProviderError,
     ProviderRateLimited,
     ProviderServerError,
@@ -215,6 +216,27 @@ def test_openai_timeout_and_transport_errors():
         oa(timeout).complete(REQ)
     with pytest.raises(ProviderServerError):
         oa(refused).complete(REQ)
+
+
+@pytest.mark.parametrize("content", ["", "   ", None])
+def test_openai_empty_completion_is_a_retryable_error_not_an_answer(content):
+    body = {
+        "choices": [{"message": {"content": content, "reasoning": "..."}, "finish_reason": "stop"}],
+        "usage": {"prompt_tokens": 5, "completion_tokens": 105},
+    }
+    with pytest.raises(EmptyResponse) as err:
+        oa(lambda r: httpx.Response(200, json=body)).complete(REQ)
+    assert err.value.retry_after is None
+    assert "finish_reason='stop'" in str(err.value) and "reasoning" in str(err.value)
+
+
+def test_openai_empty_content_is_fine_when_the_model_called_a_tool():
+    body = ok_body(
+        content="",
+        tool_calls=[{"id": "c1", "function": {"name": "lookup", "arguments": '{"k": "price"}'}}],
+    )
+    response = oa(lambda r: httpx.Response(200, json=body)).complete(REQ)
+    assert response.tool_calls[0].name == "lookup"
 
 
 @pytest.mark.parametrize(

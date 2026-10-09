@@ -15,6 +15,7 @@ from typing import Any
 import httpx
 
 from pma.errors import (
+    EmptyResponse,
     ProviderError,
     ProviderRateLimited,
     ProviderServerError,
@@ -160,6 +161,15 @@ class OpenAICompatibleProvider(LLMProvider):
                 )
             except (KeyError, ValueError, TypeError) as exc:
                 raise ProviderError("malformed tool call in provider response") from exc
+
+        if not content.strip() and not tool_calls:
+            # Never pass an empty reply on as if it were an answer: the "repair" step would then
+            # invent output from nothing. Report only metadata (no content) and let the retry
+            # logic ask again.
+            raise EmptyResponse(
+                f"empty completion (finish_reason={choice.get('finish_reason')!r}, "
+                f"message fields={sorted(message)})"
+            )
 
         usage_raw = data.get("usage") or {}
         if "prompt_tokens" in usage_raw:

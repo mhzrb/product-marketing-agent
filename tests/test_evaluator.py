@@ -140,7 +140,10 @@ def test_description_must_name_the_product(make_eval, product, draft):
     draft.en.description = (
         "A laptop designed for IT managers. Priced at €1,299.00 excl. VAT. Specs: RAM: 16 GB."
     )
-    assert "mentions_product" in failed_names(make_eval(product).evaluate(draft, 1))
+    report = make_eval(product).evaluate(draft, 1)
+    assert "mentions_product" in failed_names(report)
+    # the feedback must say WHICH name is required, otherwise a model cannot fix it reliably
+    assert any('"Dell Latitude 5440"' in line for line in report.feedback_lines())
 
 
 def test_placeholder_leftovers_fail(make_eval, product, draft):

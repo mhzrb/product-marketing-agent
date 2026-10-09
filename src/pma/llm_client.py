@@ -167,9 +167,15 @@ class LLMClient:
         *,
         prompt: Prompt,
         max_tokens: int = 2000,
+        temperature: float = 0.3,
     ) -> tuple[M, bool]:
         """One LLM call whose output must validate against ``model`` (one repair attempt)."""
         response = self.call(
-            purpose, messages, prompt=prompt, json_mode=True, max_tokens=max_tokens
+            purpose,
+            messages,
+            prompt=prompt,
+            json_mode=True,
+            max_tokens=max_tokens,
+            temperature=temperature,
         )
         return self.validate(response.content, model, purpose=purpose, max_tokens=max_tokens)

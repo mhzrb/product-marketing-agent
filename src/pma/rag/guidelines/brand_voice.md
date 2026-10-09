@@ -25,8 +25,12 @@ and Belgium. They buy laptops, monitors, networking gear, storage and peripheral
 
 ## Words we like
 
-reliable, manageable, ready for rollout, built for teams, compatible with, designed for, suited to,
-straightforward, dependable, clear pricing.
+Factual, specific phrasing: ready for rollout, built for teams, compatible with, designed for,
+suited to, manageable.
+
+Quality words such as "reliable", "dependable", "straightforward", "clear pricing" or "ideal for"
+are claims. Use them only when the product data itself supports them; otherwise state the facts
+from the data and leave the praise out.
 
 ## Words we avoid
 

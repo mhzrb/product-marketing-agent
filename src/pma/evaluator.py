@@ -252,7 +252,8 @@ class Evaluator:
             content = draft.get(lang)
             assert content is not None
             if needle and needle not in content.description.lower():
-                problems.append(f"{lang}.description does not name the product")
+                shown = self.facts.product.name
+                problems.append(f'{lang}.description does not contain the product name "{shown}"')
         return self._result("mentions_product", problems, "description names the product")
 
     def _injection(self, draft: MarketingDraft, langs: list[str]) -> CheckResult:

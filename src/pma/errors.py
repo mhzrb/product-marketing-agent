@@ -35,6 +35,10 @@ class ProviderServerError(RetryableProviderError):
     pass
 
 
+class EmptyResponse(RetryableProviderError):
+    """The model returned no text and no tool call (seen with some reasoning models)."""
+
+
 class OutputValidationError(PMAError):
     """The model output could not be parsed/validated, even after one repair attempt."""
 

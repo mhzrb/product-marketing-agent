@@ -9,7 +9,7 @@ import pytest
 
 from pma.agent import MarketingAgent
 from pma.baseline import BaselineGenerator
-from pma.errors import ProviderError, ProviderServerError, ProviderTimeout
+from pma.errors import EmptyResponse, ProviderError, ProviderServerError, ProviderTimeout
 from pma.providers.base import LLMResponse, ToolCall
 from pma.schemas import AgentResult, ProductInput
 
@@ -390,3 +390,20 @@ def test_baseline_reports_unrepairable_output(settings, retriever, product):
     assert (
         result.status == "failed" and result.evaluations[0].failed_checks[0].name == "schema_valid"
     )
+
+
+def test_empty_model_reply_in_the_json_protocol_is_retried_not_repaired(make_agent, product):
+    provider = make_provider(
+        overrides={"plan": [EmptyResponse("empty completion")]}, supports_tools=False
+    )
+    result = make_agent(provider).run(product, ["en", "nl"])
+    assert result.status == "passed"
+    assert not [r for r in provider.requests if r.purpose == "repair"]
+
+
+def test_the_judge_is_called_with_temperature_zero(make_agent, product):
+    provider = make_provider()
+    make_agent(provider).run(product, ["en", "nl"])
+    judge_requests = [r for r in provider.requests if r.purpose == "judge"]
+    assert judge_requests and all(r.temperature == 0.0 for r in judge_requests)
+    assert all(r.temperature > 0 for r in provider.requests if r.purpose == "draft")

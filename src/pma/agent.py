@@ -146,8 +146,14 @@ def make_judge(ctx: RunContext) -> Callable[[MarketingDraft, list[CheckResult]],
         )
         messages = [ChatMessage("system", system), ChatMessage("user", user)]
         try:
+            # temperature 0: a reviewer that changes its mind between identical calls is useless
             verdict, _ = ctx.client.structured(
-                "judge", messages, JudgeVerdict, prompt=judge_prompt, max_tokens=800
+                "judge",
+                messages,
+                JudgeVerdict,
+                prompt=judge_prompt,
+                max_tokens=800,
+                temperature=0.0,
             )
             return verdict
         except OutputValidationError as exc:

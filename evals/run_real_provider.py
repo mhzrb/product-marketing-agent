@@ -83,7 +83,7 @@ def main(argv: list[str] | None = None) -> int:
     settings = replace(settings, trace_dir=Path(tempfile.mkdtemp(prefix="pma-eval-")))
     provider = build_provider(settings)
     report = run_comparison(
-        cases, provider, settings, approaches=approaches,
+        cases, provider, settings, approaches=approaches, save_traces=True,
         progress=lambda m: print(m, file=sys.stderr),
     )  # fmt: skip
     report.notes.append(
