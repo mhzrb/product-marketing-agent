@@ -12,7 +12,7 @@
 ## Next (needs things this workspace did not have)
 1. Done in small form (Groq free tier, see README "Real-model run"). Still open: agent vs baseline on
    `evals/products_hard10.csv` (blocked by the free daily token budget), and Ollama.
-2. Run `docker build` / `docker compose up` and let the CI workflow run on GitHub.
+2. Done: CI (tests on 3.11-3.13, ruff, Docker build and smoke test) is green on GitHub. Still open: `docker compose up`.
 3. Try the web page in a real browser.
 4. Tune banned-phrase and injection patterns on real model output.
 

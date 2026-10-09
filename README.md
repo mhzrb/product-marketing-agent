@@ -147,9 +147,9 @@ cp .env.example .env     # optional
 docker compose up --build
 ```
 
-> **NOT VERIFIED:** `docker build` / `docker compose up` could not be run in the build workspace
-> (Docker Hub was blocked by the sandbox egress policy, so the base image could not be pulled).
-> What was verified instead is listed in the table below.
+> **Partly verified:** the GitHub Actions `docker` job builds the image and smoke-tests the
+> container (`/health` and one `POST /api/generate` with the mock provider) on every push.
+> `docker compose up` itself, and running the container with a real LLM, have not been run.
 
 ## Tests and lint
 
@@ -334,8 +334,8 @@ and 200,000 per day when this was run) and are **not** model latency.
 
 | Item | Status | Evidence / reason |
 |---|---|---|
-| Unit + integration tests (Python 3.13) | **Verified** | `pytest --cov`, see numbers above |
-| `ruff check` and `ruff format --check` | **Verified** | clean |
+| Unit + integration tests (Python 3.11, 3.12, 3.13) | **Verified** | `pytest --cov` locally (3.12) and in GitHub Actions on all three versions |
+| `ruff check` and `ruff format --check` | **Verified** | clean, also run in GitHub Actions |
 | Offline demo with mock provider (CLI) | **Verified** | `pma demo --out docs` -> `docs/demo_output.md`, `docs/sample_trace.json` |
 | API served from an installed wheel (clean venv): `/health`, page, `/api/generate`, trace fetch | **Verified** | run with `uvicorn pma.api:app_factory --factory`; example in `docs/api_example_injection.json` |
 | Package data (prompts, guidelines, static files) included in the wheel | **Verified** | wheel contents listed and served |
@@ -343,9 +343,10 @@ and 200,000 per day when this was run) and are **not** model latency.
 | OpenAI-compatible provider over real HTTP vs a **local fake server** (retries on 429/5xx, timeout, native + JSON-protocol tools) | **Verified (fake only)** | `tests/test_http_integration.py` |
 | `docker-compose.yml` syntax | **Verified** | `docker compose config` |
 | `app.js` syntax | **Verified** | `node --check` |
-| `docker build` / running the container | **NOT VERIFIED** | Docker daemon starts, but Docker Hub is blocked in the sandbox (403), base image cannot be pulled |
-| GitHub Actions workflow | **NOT VERIFIED** | YAML parses; never executed (no GitHub access) |
-| Python 3.11 / 3.12 | **NOT VERIFIED** | only 3.13 available; CI matrix covers 3.11-3.13 |
+| `docker build` and running the container (mock provider) | **Verified (CI)** | GitHub Actions `docker` job: image builds, `/health` and `POST /api/generate` answer |
+| `docker compose up` | **NOT VERIFIED** | only `docker compose config` was run; CI uses `docker run` |
+| GitHub Actions workflow | **Verified** | all 4 jobs (test 3.11, 3.12, 3.13, docker) green on `main` |
+| Python 3.11 / 3.12 / 3.13 | **Verified** | GitHub Actions matrix, all green |
 | Real hosted LLM, small runs (Groq free tier, `openai/gpt-oss-120b`) | **Verified (one provider, small n)** | see [Real-model run](#real-model-run-small-one-provider) |
 | Ollama, Anthropic adapter, other hosted APIs | **NOT VERIFIED** | only fakes |
 | Agent vs single prompt on harder cases with a real model | **NOT MEASURED** | the free daily token budget ran out before the agent runs |
