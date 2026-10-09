@@ -158,7 +158,7 @@ ruff check . && ruff format --check .
 pytest --cov
 ```
 
-Last run in the build workspace (Python 3.13): **305 tests passed**, line+branch coverage **96%**, `ruff check` and `ruff format --check` clean.
+Last run in the build workspace (Python 3.13): **312 tests passed**, line+branch coverage **96%**, `ruff check` and `ruff format --check` clean.
 
 What the suite covers: tools (EN + NL banned-claim patterns, argument validation), BM25/embeddings
 retrieval and fallback, number/unit normalisation and conflict handling, every evaluator check,

@@ -205,6 +205,15 @@ def test_native_transport_sends_tool_specs_to_the_provider(make_agent, product):
     assert not any(r.tools for r in provider.requests if r.purpose != "plan")
 
 
+def test_native_plan_prompt_tells_the_model_not_to_deliver_the_answer_as_a_tool_call(
+    make_agent, product
+):
+    provider = make_provider()
+    run(make_agent, provider, product)
+    plan_request = next(r for r in provider.requests if r.purpose == "plan")
+    assert "never call a tool named json" in plan_request.messages[1].content.lower()
+
+
 def test_protocol_violations_end_in_an_error_status(make_agent, product):
     provider = make_provider(
         overrides={"plan": ['{"action": "tool"}'], "repair": ['{"action": "tool"}']},

@@ -9,6 +9,7 @@ from pma.config import Settings
 from pma.errors import (
     ConfigError,
     EmptyResponse,
+    InvalidToolCall,
     ProviderError,
     ProviderRateLimited,
     ProviderServerError,
@@ -19,6 +20,7 @@ from pma.providers.anthropic import AnthropicProvider
 from pma.providers.base import ChatMessage, LLMRequest, LLMResponse, ToolCall, ToolSpec
 from pma.providers.mock import MockProvider, MockScriptExhausted
 from pma.providers.openai_compat import OpenAICompatibleProvider
+from pma.reliability import retry_call
 
 REQ = LLMRequest(
     messages=[ChatMessage("system", "be brief"), ChatMessage("user", "hi")], purpose="draft"
@@ -196,6 +198,52 @@ def test_openai_status_codes_map_to_retryable_or_permanent_errors(status, error)
     assert type(err.value) is error or isinstance(err.value, error)
     if status in (429, 500, 503):
         assert err.value.retry_after == 3.0
+
+
+TOOL_USE_FAILED = {
+    "error": {
+        "message": "Tool call validation failed: attempted to call tool 'json'",
+        "type": "invalid_request_error",
+        "code": "tool_use_failed",
+        "failed_generation": "SECRET-MODEL-OUTPUT",
+    }
+}
+
+
+def test_openai_tool_use_failed_is_a_retryable_error_without_the_model_output():
+    p = oa(lambda r: httpx.Response(400, json=TOOL_USE_FAILED))
+    with pytest.raises(InvalidToolCall) as err:
+        p.complete(REQ)
+    assert isinstance(err.value, ProviderError)
+    assert "SECRET-MODEL-OUTPUT" not in str(err.value)
+
+
+@pytest.mark.parametrize(
+    "response",
+    [
+        httpx.Response(400, json={"error": {"code": "context_length_exceeded"}}),
+        httpx.Response(400, json={"error": "tool_use_failed"}),
+        httpx.Response(400, json=["tool_use_failed"]),
+        httpx.Response(400, text="tool_use_failed but not json"),
+    ],
+)
+def test_other_400_errors_are_not_treated_as_invalid_tool_calls(response):
+    p = oa(lambda r: response)
+    with pytest.raises(ProviderError) as err:
+        p.complete(REQ)
+    assert not isinstance(err.value, InvalidToolCall)
+
+
+def test_openai_tool_use_failed_is_retried_and_the_next_answer_is_used():
+    answers = [
+        httpx.Response(400, json=TOOL_USE_FAILED),
+        httpx.Response(
+            200, json={"choices": [{"message": {"content": "fine"}, "finish_reason": "stop"}]}
+        ),
+    ]
+    p = oa(lambda r: answers.pop(0))
+    response = retry_call(lambda: p.complete(REQ), retries=2, base=0, cap=0, sleep=lambda _: None)
+    assert response.content == "fine" and answers == []
 
 
 def test_openai_error_messages_never_contain_the_key_or_response_body():

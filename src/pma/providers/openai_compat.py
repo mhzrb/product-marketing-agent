@@ -16,6 +16,7 @@ import httpx
 
 from pma.errors import (
     EmptyResponse,
+    InvalidToolCall,
     ProviderError,
     ProviderRateLimited,
     ProviderServerError,
@@ -41,6 +42,15 @@ def _retry_after(response: httpx.Response) -> float | None:
         return max(0.0, float(raw))
     except ValueError:
         return None
+
+
+def _is_tool_use_failed(response: httpx.Response) -> bool:
+    try:
+        data = response.json()
+    except ValueError:
+        return False
+    error = data.get("error") if isinstance(data, dict) else None
+    return isinstance(error, dict) and error.get("code") == "tool_use_failed"
 
 
 def _to_wire(message: ChatMessage) -> dict[str, Any]:
@@ -136,6 +146,11 @@ class OpenAICompatibleProvider(LLMProvider):
             raise ProviderServerError(
                 f"server error {response.status_code}", retry_after=_retry_after(response)
             )
+        if response.status_code == 400 and _is_tool_use_failed(response):
+            # The model wrote an invalid tool call (seen with gpt-oss on Groq: it tried to call a
+            # tool named "json" to deliver its final answer). The body holds the model's output,
+            # so it is not copied into the error message.
+            raise InvalidToolCall("the model produced an invalid tool call (tool_use_failed)")
         if response.status_code >= 400:
             # Never echo the response body into logs verbatim: it may contain request content.
             raise ProviderError(f"request rejected with status {response.status_code}")

@@ -250,7 +250,12 @@ class MarketingAgent:
         system = ctx.prompts.get("system").render()
         allowed = ["lookup_product_fact", "retrieve_guidelines"]
         if ctx.client.provider.supports_tools:
-            instructions = "Use the provided tools through the tool-calling interface."
+            instructions = (
+                "Use the provided tools through the tool-calling interface and call only the "
+                "tools that are listed. When you have finished with the tools, write the final "
+                "JSON object as ordinary message text. Never put the final JSON in a tool call "
+                "and never call a tool named json."
+            )
         else:
             instructions = ctx.prompts.get("tool_protocol").render(
                 tool_list=tool_list_text(ctx.registry, allowed)

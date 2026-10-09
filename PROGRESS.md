@@ -5,7 +5,7 @@
 - Phase 2: providers (mock/simulated, OpenAI-compatible, Anthropic), RAG (BM25 + optional embeddings),
   tools, facts, security, evaluator, agent loop, reliability, tracing, versioned prompts
 - Phase 3: FastAPI service + web page, CLI, 30-product dataset, eval harness, real-provider script
-- Phase 4: pytest suite (305 tests, 96% coverage), fake OpenAI-compatible server, ruff clean
+- Phase 4: pytest suite (312 tests, 96% coverage), fake OpenAI-compatible server, ruff clean
 - Phase 5: Dockerfile, docker-compose, .env.example, GitHub Actions, docs/ (demo, sample trace,
   eval results, injection example), README
 

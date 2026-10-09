@@ -39,6 +39,11 @@ class EmptyResponse(RetryableProviderError):
     """The model returned no text and no tool call (seen with some reasoning models)."""
 
 
+class InvalidToolCall(RetryableProviderError):
+    """The provider rejected the model's own output as a malformed tool call (HTTP 400,
+    code ``tool_use_failed``). Sampling is random, so another attempt can succeed."""
+
+
 class OutputValidationError(PMAError):
     """The model output could not be parsed/validated, even after one repair attempt."""
 
