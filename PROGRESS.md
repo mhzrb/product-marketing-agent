@@ -10,8 +10,9 @@
   eval results, injection example), README
 
 ## Next (needs things this workspace did not have)
-1. Done in small form (Groq free tier, see README "Real-model run"). Still open: agent vs baseline on
-   `evals/products_hard10.csv` (blocked by the free daily token budget), and Ollama.
+1. Done in small form (Groq free tier, see README "Real-model run"), including agent vs baseline on
+   `evals/products_hard10.csv` (one run). Still open: repeat runs, re-run the easy products with the
+   fixed agent, a held-out set, human rating of the copy, and Ollama.
 2. Done: CI (tests on 3.11-3.13, ruff, Docker build and smoke test) is green on GitHub. Still open: `docker compose up`.
 3. Done by hand with the mock provider (9 Oct). Still open: the page with a real provider.
 4. Tune banned-phrase and injection patterns on real model output.

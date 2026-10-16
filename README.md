@@ -19,9 +19,10 @@ No LangChain, no agent framework: `httpx` + `pydantic` + FastAPI only.
 > evaluation tables in [Results](#results-mock-provider-only) run against `MockProvider`, a
 > **rule-based simulator, not a language model**. It writes template copy and injects *scripted*
 > mistakes so the surrounding system can be exercised; those percentages say nothing about real
-> model quality. A small run against one real model (Groq free tier, `openai/gpt-oss-120b`) is
-> documented in [Real-model run](#real-model-run-small-one-provider). It found real bugs, and it
-> did **not** show that the agent beats a single prompt. See also
+> model quality. Small runs against one real model (Groq free tier, `openai/gpt-oss-120b`) are
+> documented in [Real-model run](#real-model-run-small-one-provider). They found five real bugs. On
+> 10 harder products the agent loop passed 8/10 and a single prompt 1/10 (one run, same-model
+> judge, no human rating), at about 3.3x the tokens. See also
 > [Verified here / NOT VERIFIED](#verified-here--not-verified).
 
 ## Architecture
@@ -291,21 +292,64 @@ mock, not model latency; token counts are estimates (~4 characters/token).
 
 ## Real-model run (small, one provider)
 
-Run on 8 Oct 2026 with `evals/run_real_provider.py` against the Groq free tier, model
+Runs on 8, 9 and 16 Oct 2026 with `evals/run_real_provider.py` against the Groq free tier, model
 `openai/gpt-oss-120b`, through `OpenAICompatibleProvider`. Every run was a **single run with small
 n and no repeats: treat it as anecdotal, not statistical**. The judge is the same model that writes
-the copy. Latencies include waiting for rate limits (the free tier allowed 8,000 tokens per minute
-and 200,000 per day when this was run) and are **not** model latency.
+the copy, and nobody rated the copy by hand: "passed" means the 11 deterministic checks plus that
+judge. Latencies include waiting for rate limits (the free tier allowed 8,000 tokens per minute
+and 200,000 per day) and are **not** model latency. Token counts are estimates (~4 characters per
+token).
 
-| Run | Setup | Result |
+### Latest comparison: 10 harder products, both approaches in one run (16 Oct)
+
+Set: [`evals/products_hard10.csv`](evals/products_hard10.csv), chosen by case type before any run
+(conflicting data, prompt injection, missing price or specs, Dutch input, long specs, unicode).
+Native tool calling. Raw output: `evals/results/real_openai_compatible_20261016T104240.{md,json}`.
+
+| Metric | Single-prompt baseline | Agent loop |
 |---|---|---|
-| 1 product (Dell Latitude 5440), agent, before the fixes below | JSON tool protocol | passed on iteration 3 (9 LLM calls) |
-| 5 "normal" products, before the fixes below | JSON tool protocol | baseline 2/5, agent 0/5: every agent run died in the plan step (empty model reply, see bug 1) |
-| 5 "normal" products, after the fixes | JSON tool protocol | baseline **5/5**, agent **2/5** (2 plan-step errors, 1 failed `numbers_supported`); agent used 2.3x the tokens |
-| 1 product, agent | native tool calling | passed on iteration 2 (7 LLM calls), n=1 |
-| 10 harder products ([`evals/products_hard10.csv`](evals/products_hard10.csv)), baseline | native tool calling | 4/10 passed (`llm_judge` 2, `conflicts_not_used`, `length`, `mentions_product`, 1 error) |
-| same 10 products, agent | native tool calling | **NOT MEASURED**: all 10 runs ended in HTTP 429 because the free daily token budget was used up |
-| Input-side signals on those 10 | deterministic | conflict 2/2, injection 3/3, missing price 1/1, missing specs 2/2 flagged (independent of the model) |
+| Passed | **1/10** | **8/10** |
+| Passed on the first draft | 1/10 | 2/10 |
+| Avg draft+evaluate rounds | 1.0 | 2.3 |
+| Avg LLM calls per product | 1.9 | 7.3 |
+| Avg tokens per product (estimated) | 4,138 | 13,712 (3.3x) |
+| Avg wall-clock per product (includes rate-limit waits) | 32.5 s | 105.3 s |
+
+| Case type | Baseline | Agent |
+|---|---|---|
+| prompt injection | 0/3 | 3/3 |
+| missing data | 0/2 | 2/2 |
+| conflicting data | 1/2 | 1/2 |
+| Dutch input | 0/1 | 1/1 |
+| long specs | 0/1 | 1/1 |
+| unicode | 0/1 | 0/1 |
+
+Why the baseline failed (9 runs): the LLM judge 6 times, an incomplete JSON reply 2 times, length
+once, a missing product name once (one run failed two checks). The agent's two failures were
+`length` and `conflicts_not_used`. Input-side signals were flagged correctly on all of them
+(conflict 2/2, injection 3/3, missing price 1/1, missing specs 2/2); those are deterministic and
+do not depend on the model.
+
+**How to read this.** The baseline gets one attempt, no tools and no retrieved guidelines. The
+agent gets tools, retrieved guidelines and up to three revision rounds with the evaluator's
+feedback. So the result mostly says that a check-and-revise loop repairs what one shot gets wrong
+on this model, at about 3.3x the tokens. It does not say the copy is good: on the first draft the
+two approaches were almost equally weak (1/10 and 2/10).
+
+### Earlier runs and what they found
+
+| Date | Run | Result |
+|---|---|---|
+| 8 Oct | 1 product, agent, JSON tool protocol, before the fixes | passed on round 3 (9 LLM calls) |
+| 8 Oct | 5 "normal" products, before the fixes | baseline 2/5, agent 0/5: every agent run died in the plan step (bug 1) |
+| 8 Oct | same 5, after fixes 1-4 | baseline 5/5, agent 2/5 (2 plan-step errors, 1 failed `numbers_supported`) |
+| 8 Oct | 10 harder products, baseline only | 4/10 passed |
+| 8 Oct | same 10, agent | not measured: HTTP 429, the daily token budget was used up |
+| 9 Oct | same 10, agent, native tool calling, before fix 5 | 5/10: 4 of the 10 runs died with HTTP 400 (bug 5), 5 passed, 1 failed |
+| 16 Oct | same 10, both approaches | see the table above |
+
+The baseline on the same 10 products passed 4/10 on 8 Oct and 1/10 on 16 Oct. **That spread shows
+how noisy a single run is.**
 
 **What the real model found** (none of these showed up with the simulator):
 
@@ -320,15 +364,32 @@ and 200,000 per day when this was run) and are **not** model latency.
 4. **The judge was inconsistent and re-judged numbers.** It ran at temperature 0.3, rejected
    "1.299,00" in one round and demanded it in the next, and duplicated the deterministic number
    check. Fixed: temperature 0 and a narrower judge prompt (`judge.md` v1.1.0).
+5. **The model delivered its finished plan as a call to a tool named `json`.** With native tool
+   calling, after its real tool calls the model sometimes sent the final plan as a call to a tool
+   that does not exist. Groq rejects that with HTTP 400 `tool_use_failed` and includes the model's
+   output in the error. Fixed in three layers: such a rejection is retried (`InvalidToolCall`); if
+   the rejected call was to a tool named exactly `json` with an object as arguments, the plan is
+   taken from it and goes through the normal schema validation (a warning is logged each time);
+   and the prompt tells the model not to do this. **In the 16 Oct run, 5 of the 10 agent runs
+   needed that recovery for their plan.** So on this model the native tool path leans on a
+   workaround. The JSON tool protocol (`LLM_SUPPORTS_TOOLS=false`, the default) cannot hit this
+   particular failure, but it was not re-run on the harder 10, so which transport is better is
+   unknown.
 
 **Caveats you should hold against these results**
 
+- n=10, one run per approach, one model, one provider. The baseline changed from 4/10 to 1/10
+  between two runs of the same products.
+- The judge is the same model as the writer, and no human rated the output. Quality of the copy is
+  **not measured**.
 - Prompts were changed after seeing failures on products p01-p05, which are part of the evaluation
-  set, so results on those products are **not a held-out test**.
-- On the five easy products the single prompt was better and cheaper than the agent loop.
-- Whether the agent loop beats a single prompt on harder cases (conflicts, injection, missing data)
-  is **not measured**. Re-run `python evals/run_real_provider.py --csv evals/products_hard10.csv
-  --approaches agent` when a model with enough token budget is available.
+  set, so results on those are **not a held-out test**. The harder 10 were not used to tune the
+  prompts, but one line was added to the planning prompt after they crashed (fix 5), so they are not
+  perfectly clean either.
+- The earlier five-easy-products result (baseline 5/5, agent 2/5, 8 Oct) was measured before the
+  plan-step fixes and has **not been re-run**, so it does not describe the current agent. Whether
+  the agent still loses on easy products is unknown.
+- Cost in money was not measured, only estimated tokens.
 
 ## Verified here / NOT VERIFIED
 
@@ -349,10 +410,10 @@ and 200,000 per day when this was run) and are **not** model latency.
 | Python 3.11 / 3.12 / 3.13 | **Verified** | GitHub Actions matrix, all green |
 | Real hosted LLM, small runs (Groq free tier, `openai/gpt-oss-120b`) | **Verified (one provider, small n)** | see [Real-model run](#real-model-run-small-one-provider) |
 | Ollama, Anthropic adapter, other hosted APIs | **NOT VERIFIED** | only fakes |
-| Agent vs single prompt on harder cases with a real model | **NOT MEASURED** | the free daily token budget ran out before the agent runs |
+| Agent vs single prompt on harder cases with a real model | **Measured once (n=10)** | 16 Oct: agent 8/10, single prompt 1/10; same-model judge, no human rating, single run. See [Real-model run](#real-model-run-small-one-provider) |
 | Real embeddings endpoint (`EMBEDDINGS_BACKEND=openai_compatible`) | **NOT VERIFIED** | tested with `httpx.MockTransport` only |
 | Web page behaviour in a browser | **Verified manually (mock provider only)** | `pma serve`, tried by hand on 9 Oct 2026: both buttons return a result, a changed product name appears in the text, and an injection sentence in Notes is flagged under "Security" and not echoed. Not tested: real provider through the page, other browsers, phone screens |
-| Quality of real generated copy, real pass rates, cost | **Partly measured** | small single runs only (see above); cost not measured |
+| Quality of real generated copy, real pass rates, cost | **Partly measured** | pass rates from small single runs only; quality not rated by a human; cost in money not measured |
 | Native-speaker quality of Dutch output | **NOT VERIFIED** | Dutch text here is from templates; checks are heuristic |
 
 ## Honest limitations

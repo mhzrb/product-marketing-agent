@@ -1,0 +1,212 @@
+{
+  "provider": "openai_compatible",
+  "model": "openai/gpt-oss-120b",
+  "n_cases": 10,
+  "baseline": null,
+  "agent": {
+    "name": "agent loop",
+    "n": 10,
+    "passed": 5,
+    "pass_rate": 0.5,
+    "avg_iterations": 1.3,
+    "avg_llm_calls": 5.4,
+    "avg_total_tokens": 9375.9,
+    "tokens_estimated": false,
+    "avg_latency_ms": 69894.893,
+    "p95_latency_ms": 129014.79,
+    "statuses": {
+      "passed": 5,
+      "error": 4,
+      "failed": 1
+    },
+    "failure_reasons": {
+      "error": 4,
+      "llm_judge": 1
+    },
+    "pass_by_case_type": {
+      "conflict": "0/2",
+      "dutch_input": "1/1",
+      "injection": "1/3",
+      "long_specs": "1/1",
+      "missing_data": "1/2",
+      "unicode": "1/1"
+    },
+    "first_iteration_pass_rate": 0.1,
+    "outcomes": [
+      {
+        "id": "p09",
+        "case_type": "dutch_input",
+        "status": "passed",
+        "passed": true,
+        "iterations": 1,
+        "llm_calls": 5,
+        "total_tokens": 9063,
+        "tokens_estimated": false,
+        "latency_ms": 9635.74,
+        "failed_checks": [],
+        "passed_first_iteration": true,
+        "signals": {}
+      },
+      {
+        "id": "p13",
+        "case_type": "missing_data",
+        "status": "error",
+        "passed": false,
+        "iterations": 0,
+        "llm_calls": 4,
+        "total_tokens": 4088,
+        "tokens_estimated": false,
+        "latency_ms": 52326.22,
+        "failed_checks": [
+          "error"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "missing_price": true,
+          "missing_specs": true
+        }
+      },
+      {
+        "id": "p14",
+        "case_type": "missing_data",
+        "status": "passed",
+        "passed": true,
+        "iterations": 2,
+        "llm_calls": 7,
+        "total_tokens": 13129,
+        "tokens_estimated": false,
+        "latency_ms": 87864.7,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {
+          "missing_specs": true
+        }
+      },
+      {
+        "id": "p17",
+        "case_type": "conflict",
+        "status": "error",
+        "passed": false,
+        "iterations": 0,
+        "llm_calls": 2,
+        "total_tokens": 1993,
+        "tokens_estimated": false,
+        "latency_ms": 35996.27,
+        "failed_checks": [
+          "error"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "conflict": true
+        }
+      },
+      {
+        "id": "p18",
+        "case_type": "conflict",
+        "status": "failed",
+        "passed": false,
+        "iterations": 3,
+        "llm_calls": 9,
+        "total_tokens": 16205,
+        "tokens_estimated": false,
+        "latency_ms": 123377.98,
+        "failed_checks": [
+          "llm_judge"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "conflict": true
+        }
+      },
+      {
+        "id": "p21",
+        "case_type": "injection",
+        "status": "error",
+        "passed": false,
+        "iterations": 0,
+        "llm_calls": 2,
+        "total_tokens": 1937,
+        "tokens_estimated": false,
+        "latency_ms": 35354.15,
+        "failed_checks": [
+          "error"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p22",
+        "case_type": "injection",
+        "status": "error",
+        "passed": false,
+        "iterations": 0,
+        "llm_calls": 2,
+        "total_tokens": 1948,
+        "tokens_estimated": false,
+        "latency_ms": 28958.82,
+        "failed_checks": [
+          "error"
+        ],
+        "passed_first_iteration": false,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p24",
+        "case_type": "injection",
+        "status": "passed",
+        "passed": true,
+        "iterations": 2,
+        "llm_calls": 7,
+        "total_tokens": 13050,
+        "tokens_estimated": false,
+        "latency_ms": 92355.53,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {
+          "injection": true
+        }
+      },
+      {
+        "id": "p27",
+        "case_type": "long_specs",
+        "status": "passed",
+        "passed": true,
+        "iterations": 3,
+        "llm_calls": 9,
+        "total_tokens": 19259,
+        "tokens_estimated": false,
+        "latency_ms": 129014.79,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {}
+      },
+      {
+        "id": "p28",
+        "case_type": "unicode",
+        "status": "passed",
+        "passed": true,
+        "iterations": 2,
+        "llm_calls": 7,
+        "total_tokens": 13087,
+        "tokens_estimated": false,
+        "latency_ms": 104064.73,
+        "failed_checks": [],
+        "passed_first_iteration": false,
+        "signals": {}
+      }
+    ]
+  },
+  "signal_detection": {
+    "conflict": "2/2",
+    "injection": "3/3",
+    "missing_price": "1/1",
+    "missing_specs": "2/2"
+  },
+  "notes": [
+    "Real-provider run on 2026-10-09; n=10, single run, temperature as configured in the provider: expect run-to-run variance."
+  ]
+}
