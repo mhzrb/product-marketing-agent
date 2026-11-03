@@ -15,6 +15,7 @@ than a prompt wrapper:
 
 No LangChain, no agent framework: `httpx` + `pydantic` + FastAPI only.
 
+![How the agent works: plan, draft, evaluate and revise loop, with checks around every model call](docs/agent_loop.png)
 > **Read this first - what is simulated.** The offline demo, the test suite and the large
 > evaluation tables in [Results](#results-mock-provider-only) run against `MockProvider`, a
 > **rule-based simulator, not a language model**. It writes template copy and injects *scripted*
